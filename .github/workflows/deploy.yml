@@ -44,19 +44,8 @@ jobs:
             - name: Check out repository
               uses: actions/checkout@v4
 
-            - name: Configure SSH
-              uses: webfactory/ssh-agent@v0.9.1
+            - name: Push to dokku
+              uses: dokku/github-action@master
               with:
-                  ssh-private-key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
-
-            - name: Trust Dokku host
-              env:
-                  DOKKU_KNOWN_HOSTS: ${{ secrets.DOKKU_KNOWN_HOSTS }}
-              run: |
-                  mkdir -p ~/.ssh
-                  printf '%s\n' "$DOKKU_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-
-            - name: Deploy
-              run: |
-                  git remote add dokku "dokku@${DOKKU_HOST}:${DOKKU_APP}"
-                  git push dokku HEAD:master
+                  git_remote_url: "ssh://dokku@sidoine.net:22/poker"
+                  ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
